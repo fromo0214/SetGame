@@ -16,17 +16,37 @@ struct CardView: View {
                     color: card.content.color.swiftUIColor,
                     shading: card.content.shading
                 )
-                .frame(width: 60, height: 30)
+                .aspectRatio(1, contentMode: .fit)
+                
             }
         }
         .padding(Constants.inset)
-        .cardify(cardColor: cardColor)
+        .cardify(borderColor: borderColor)
         .aspectRatio(Constants.aspectRatio, contentMode: .fit)
+        .opacity(card.isMatched ? 0 : 1)
         .onAppear {
             print("Rendering:", card.content)
+
+        }
+        .scaleEffect(1.2)
+    }
+    
+    private var borderColor: Color {
+        if card.isMatched {
+            return .green
+        } else if card.isMisMatched {
+            return .red
+        } else if card.isSelected {
+            return .yellow
+        } else {
+            return .black
         }
     }
+
+    
 }
+
+
 
 // MARK: - Helper Functions
 
@@ -38,7 +58,7 @@ func shapeView(for shape: Symbol.Shape, color: Color, shading: Symbol.Shading) -
     case .oval:
         buildShape(Ellipse(), color: color, shading: shading)
     case .rectangle:
-        buildShape(RoundedRectangle(cornerRadius: 10), color: color, shading: shading)
+        buildShape(RoundedRectangle(cornerRadius: 1), color: color, shading: shading)
     }
 }
 
@@ -49,7 +69,7 @@ func buildShape<ShapeType: Shape>(_ shape: ShapeType, color: Color, shading: Sym
     case .striped:
         return AnyView(
             shape
-                .stroke(color, lineWidth: 1)
+                .stroke(color, lineWidth: 2)
                 .background(Stripes().mask(shape))
         )
     case .open:
@@ -80,11 +100,11 @@ public struct Constants {
     static let cornerRadius: CGFloat = 12
     static let lineWidth: CGFloat = 5
     static let inset: CGFloat = 5
-    static let aspectRatio: CGFloat = 1
+    static let aspectRatio: CGFloat = 2/3
     
     struct FontSize {
         static let largest: CGFloat = 200
-        static let smallest: CGFloat = 10
+        static let smallest: CGFloat = 103
         static let scaleFactor = smallest / largest
     }
 }

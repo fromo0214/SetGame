@@ -43,25 +43,11 @@ struct AspectVGrid<Item: Identifiable, ItemView: View>: View{
         count: Int,
         containerSize: CGSize,
         atAspectRatio aspectRatio: CGFloat
-    ) -> CGSize{
-        //        let count = CGFloat(count)
-        //        var columnCount = 1.0
-        //        repeat{
-        //            let width = size.width / columnCount
-        //            let height = width / aspectRatio
-        //
-        //            let rowCount = (count / columnCount).rounded(.up)
-        //
-        //            if rowCount * height < size.height {
-        //                return (size.width / columnCount).rounded(.down)
-        //            }
-        //            columnCount += 1
-        //        } while columnCount < count
-        //        return min(size.width / count, size.height * aspectRatio).rounded(.down)
+    ) -> CGSize {
         guard count > 0 else { return CGSize(width: 120, height: 180) } // Default fallback size
-        
+
         let maxColumns = min(CGFloat(count), floor(containerSize.width / 90)) // Max reasonable columns
-        var columnCount = max(2, maxColumns) // At least 2 columns for reasonable layout
+        var columnCount = max(1, maxColumns) // At least 2 columns for reasonable layout
         
         repeat {
             let cardWidth = (containerSize.width - CGFloat(columnCount - 1) * 8) / CGFloat(columnCount)
@@ -69,7 +55,7 @@ struct AspectVGrid<Item: Identifiable, ItemView: View>: View{
             let rowCount = ceil(CGFloat(count) / CGFloat(columnCount))
             
             if rowCount * (cardHeight + 8) <= containerSize.height {
-                return CGSize(width: min(180, cardWidth), height: min(270, cardHeight)) // Set max limits
+                return CGSize(width: min(180, cardWidth), height: min(270 ,cardHeight)) // Set max limits
             }
             
             columnCount += 1
@@ -78,4 +64,5 @@ struct AspectVGrid<Item: Identifiable, ItemView: View>: View{
         let finalWidth = (containerSize.width - CGFloat(columnCount - 1) * 8) / CGFloat(columnCount) * 1.1
         return CGSize(width: max(70, min(180, finalWidth)), height: max(100, min(270, finalWidth / aspectRatio)))
     }
+
 }

@@ -3,7 +3,7 @@
 //  Set
 //
 //  Created by Fernando Romo on 3/18/25.
-//View
+//  View
 
 import SwiftUI
 
@@ -11,24 +11,32 @@ struct SetView: View {
     @ObservedObject var viewModel: SetViewModel
     
     typealias Card = SetGameModel<Symbol>.Card
-    private let aspectRatio: CGFloat = 2/3
+    private let aspectRatio: CGFloat = 3/5
     private let spacing: CGFloat = 3
-    var body: some View {
-        
-        ScrollView {
-            cards
-        }
-        .padding(spacing)
+    var body: some View {//
+        VStack{
+            Text("Set").font(.largeTitle)
+            ScrollViewReader { proxy in
+                cards
+            }
+            Button("Draw 3 more cards"){
+                viewModel.deal3Cards()
+            }.font(Font.system(size: 30))
+        }.padding(spacing)
     }
     
     private var cards: some View{
-        AspectVGrid(viewModel.cards, aspectRatio: aspectRatio){ card in
-            return CardView(card)
-                .padding(spacing)
-                .onTapGesture {
-                    viewModel.choose(card)
-                }
-        }.padding(.horizontal)
+        withAnimation{
+            AspectVGrid(viewModel.dealtCards, aspectRatio: aspectRatio){ card in
+                return CardView(card)
+                    .padding(spacing)
+                    .onTapGesture {
+                        withAnimation{
+                            viewModel.choose(card)
+                        }
+                    }
+            }.padding(.horizontal)
+        }
     }
     
 }
