@@ -77,7 +77,14 @@ class SetViewModel: ObservableObject {
        return deck.shuffled()
     }
     
-    func removeMatchedCards(){
-        dealtCards.removeAll(){ $0.isMatched }
+    func removeMatchedCards() {
+        let matchedIDs = dealtCards.filter { $0.isMatched }.map { $0.id }
+
+        // Remove from screen
+        dealtCards.removeAll { matchedIDs.contains($0.id) }
+
+        // Also remove from the deck
+        fullDeck.removeAll { matchedIDs.contains($0.id) }
     }
+
 }
